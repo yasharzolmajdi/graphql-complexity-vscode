@@ -2,7 +2,7 @@
   "name": "graphql-complexity-vscode",
   "displayName": "GraphQL Complexity Analyzer",
   "description": "Displays GraphQL query complexity scores in VS Code.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "iconic",
   "engines": {
     "vscode": "^1.102.0"

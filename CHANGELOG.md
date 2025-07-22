@@ -1,3 +1,8 @@
+## [1.0.2] - 2025-07-22
+
+### Changes
+- fix: remove --no-dependencies flag from package and publish scripts
+
 ## [1.0.1] - 2025-07-22
 
 ### Changes
