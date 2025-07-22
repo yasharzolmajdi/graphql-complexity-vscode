@@ -56,17 +56,29 @@ jobs:
 
       - name: Update CHANGELOG
         run: |
+          # Get commits since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"- %s" $LAST_TAG..HEAD --no-merges)
+          else
+            COMMITS=$(git log --pretty=format:"- %s" --no-merges -10)
+          fi
+
+          # Create new changelog entry
           echo "## [${{ steps.version.outputs.version_number }}] - $(date +%Y-%m-%d)" > temp_changelog.md
           echo "" >> temp_changelog.md
-          echo "### Added" >> temp_changelog.md
-          echo "- New features and improvements" >> temp_changelog.md
+
+          if [ -n "$COMMITS" ]; then
+            echo "### Changes" >> temp_changelog.md
+            echo "$COMMITS" >> temp_changelog.md
+          else
+            echo "### Changes" >> temp_changelog.md
+            echo "- Version bump to ${{ steps.version.outputs.version_number }}" >> temp_changelog.md
+          fi
+
           echo "" >> temp_changelog.md
-          echo "### Changed" >> temp_changelog.md
-          echo "- Updates and modifications" >> temp_changelog.md
-          echo "" >> temp_changelog.md
-          echo "### Fixed" >> temp_changelog.md
-          echo "- Bug fixes and patches" >> temp_changelog.md
-          echo "" >> temp_changelog.md
+
+          # Append existing changelog if it exists
           if [ -f CHANGELOG.md ]; then
             cat CHANGELOG.md >> temp_changelog.md
           fi
