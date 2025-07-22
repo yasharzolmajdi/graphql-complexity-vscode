@@ -19,8 +19,8 @@
     "format": "prettier --ignore-unknown --write .",
     "format:check": "prettier --ignore-unknown --check .",
     "check": "npm run lint && npm run format:check && npm run build",
-    "package": "vsce package --no-dependencies",
-    "publish": "vsce publish --no-dependencies",
+    "package": "vsce package",
+    "publish": "vsce publish",
     "prepare": "husky"
   },
   "keywords": [
