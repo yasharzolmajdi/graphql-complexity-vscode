@@ -1,0 +1,41 @@
+# Source files (TypeScript)
+src/
+.github/
+.gitlab-ci.yml
+.travis.yml
+tsconfig.json
+eslint.config.js
+.husky/
+.lintstagedrc
+pnpm-workspace.yaml
+
+# Cache and temporary files
+*.log
+logs/
+.cache/
+.parcel-cache/
+.eslintcache
+.prettiercache
+.lintstagedrc.cache
+.stylelintcache
+*.tsbuildinfo
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.AppleDouble
+.LSOverride
+*~
+
+# Environment files
+.env
+.env.*
+
+# Keep only what's needed for the extension to run:
+# - package.json (metadata and activation)
+# - README.md (user documentation)  
+# - CHANGELOG.md (version history)
+# - LICENSE (legal)
+# - dist/ (compiled JavaScript)

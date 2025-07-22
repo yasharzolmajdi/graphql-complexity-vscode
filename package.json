@@ -1,0 +1,168 @@
+{
+  "name": "graphql-complexity-vscode",
+  "displayName": "GraphQL Complexity Analyzer",
+  "description": "Displays GraphQL query complexity scores in VS Code.",
+  "version": "0.1.1",
+  "publisher": "iconic",
+  "type": "module",
+  "engines": {
+    "vscode": "^1.102.0"
+  },
+  "activationEvents": [
+    "onLanguage:graphql"
+  ],
+  "main": "./dist/extension.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --ignore-unknown --write .",
+    "format:check": "prettier --ignore-unknown --check .",
+    "check": "npm run lint && npm run format:check && npm run build",
+    "package": "vsce package --no-dependencies",
+    "publish": "vsce publish --no-dependencies",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "vscode",
+    "graphql",
+    "complexity",
+    "extension",
+    "developer-tools",
+    "code-analysis",
+    "graphql-query-complexity"
+  ],
+  "author": {
+    "name": "Yashar Zolmajdi",
+    "email": "yashar.zolmajdi@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yasharzolmajdi/graphql-complexity-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yasharzolmajdi/graphql-complexity-vscode/issues"
+  },
+  "homepage": "https://github.com/yasharzolmajdi/graphql-complexity-vscode#readme",
+  "license": "MIT",
+  "icon": "icons/extension-icon.png",
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Other"
+  ],
+  "galleryBanner": {
+    "color": "#E535AB",
+    "theme": "dark"
+  },
+  "dependencies": {
+    "graphql": "^16.11.0",
+    "graphql-request": "^7.2.0",
+    "graphql-validation-complexity": "^0.4.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@types/eslint__js": "^9.14.0",
+    "@types/graphql-validation-complexity": "^0.4.4",
+    "@types/node": "^24.0.14",
+    "@types/vscode": "^1.102.0",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.3.0",
+    "esbuild": "^0.25.6",
+    "eslint": "^9.31.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.37.0"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "graphqlComplexity.analyze",
+        "title": "Analyze GraphQL Complexity",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "graphqlComplexity.refresh",
+        "title": "Refresh Schema",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "graphqlComplexity.configure",
+        "title": "Configure GraphQL Complexity",
+        "icon": "$(gear)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "graphqlComplexity.analyze",
+          "when": "editorLangId == graphql"
+        },
+        {
+          "command": "graphqlComplexity.refresh"
+        },
+        {
+          "command": "graphqlComplexity.configure"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "graphqlComplexity.analyze",
+          "when": "editorLangId == graphql",
+          "group": "graphql@1"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "graphql",
+        "extensions": [
+          ".graphql",
+          ".gql"
+        ]
+      }
+    ],
+    "codeLensProviders": [
+      {
+        "language": "graphql"
+      }
+    ],
+    "configuration": {
+      "title": "GraphQL Complexity",
+      "properties": {
+        "graphqlComplexity.endpoint": {
+          "type": "string",
+          "default": "http://localhost:4000/graphql",
+          "description": "The URL of the GraphQL endpoint used for introspection."
+        },
+        "graphqlComplexity.maxThreshold": {
+          "type": "number",
+          "default": 1000,
+          "description": "Maximum allowed query complexity before showing a warning."
+        },
+        "graphqlComplexity.scalarCost": {
+          "type": "number",
+          "default": 1,
+          "description": "Complexity cost assigned to scalar fields."
+        },
+        "graphqlComplexity.fragmentsPath": {
+          "type": "string",
+          "default": ".",
+          "description": "Path to the directory containing GraphQL fragment files. Relative to the workspace root."
+        }
+      }
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}

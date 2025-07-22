@@ -1,0 +1,125 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests and checks
+        run: npm run check
+
+      - name: Build extension
+        run: npm run build
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Bump version
+        id: version
+        run: |
+          NEW_VERSION=$(npm version ${{ github.event.inputs.version }} --no-git-tag-version)
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "version_number=${NEW_VERSION#v}" >> $GITHUB_OUTPUT
+
+      - name: Update CHANGELOG
+        run: |
+          echo "## [${{ steps.version.outputs.version_number }}] - $(date +%Y-%m-%d)" > temp_changelog.md
+          echo "" >> temp_changelog.md
+          echo "### Added" >> temp_changelog.md
+          echo "- New features and improvements" >> temp_changelog.md
+          echo "" >> temp_changelog.md
+          echo "### Changed" >> temp_changelog.md
+          echo "- Updates and modifications" >> temp_changelog.md
+          echo "" >> temp_changelog.md
+          echo "### Fixed" >> temp_changelog.md
+          echo "- Bug fixes and patches" >> temp_changelog.md
+          echo "" >> temp_changelog.md
+          if [ -f CHANGELOG.md ]; then
+            cat CHANGELOG.md >> temp_changelog.md
+          fi
+          mv temp_changelog.md CHANGELOG.md
+
+      - name: Commit changes
+        run: |
+          git add package.json CHANGELOG.md
+          git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}"
+          git push
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.new_version }}
+          name: Release ${{ steps.version.outputs.new_version }}
+          body: |
+            ## What's Changed
+
+            - Version bump to ${{ steps.version.outputs.version_number }}
+            - See [CHANGELOG.md](./CHANGELOG.md) for detailed changes
+
+            ## Installation
+
+            1. Download the `.vsix` file from the assets below
+            2. In VS Code, go to Extensions view (Ctrl+Shift+X)
+            3. Click "..." menu → "Install from VSIX..."
+            4. Select the downloaded `.vsix` file
+
+            Or install directly from the marketplace: [GraphQL Complexity Analyzer](https://marketplace.visualstudio.com/items?itemName=iconic.graphql-complexity-vscode)
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install VSCE
+        run: npm install -g @vscode/vsce
+
+      - name: Package extension
+        run: vsce package --no-dependencies
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Upload VSIX to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.new_version }}
+          files: ./graphql-complexity-vscode-*.vsix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to VS Code Marketplace
+        run: vsce publish --no-dependencies --packagePath ./graphql-complexity-vscode-*.vsix
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}

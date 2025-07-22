@@ -1,0 +1,59 @@
+# Compiled output
+dist/
+out/
+*.js
+*.js.map
+*.d.ts
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# VS Code extension packaging
+*.vsix
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Cache directories
+.cache/
+.parcel-cache/
+.eslintcache
+.prettiercache
+.lintstagedrc.cache
+.stylelintcache
+
+# VS Code test directories
+.vscode-test/
+.vscode-test-web/
+
+# Build artifacts
+*.tsbuildinfo
+coverage/
+test-results/
+playwright-report/
+
+# Generated files that shouldn't be formatted
+CHANGELOG.md
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.AppleDouble
+.LSOverride
+*~
+
+# Git
+.git/
