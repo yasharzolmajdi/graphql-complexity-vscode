@@ -1,3 +1,8 @@
+## [1.0.0] - 2025-07-22
+
+### Changes
+- refactor: Refactor release workflow: update CHANGELOG dynamically and remove obsolete release.yml
+
 ## [0.1.1] - 2025-07-22
 
 ### Added
