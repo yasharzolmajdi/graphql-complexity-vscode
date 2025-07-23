@@ -1,3 +1,8 @@
+## [1.0.4] - 2025-07-23
+
+### Changes
+- feat: add esbuild configuration and problem matcher plugin
+
 ## [1.0.2] - 2025-07-22
 
 ### Changes
