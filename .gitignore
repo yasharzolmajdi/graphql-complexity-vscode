@@ -2,6 +2,7 @@
 dist/
 out/
 *.js
+!esbuild.js
 !eslint.config.js
 *.js.map
 *.d.ts
