@@ -5,6 +5,7 @@ src/
 .travis.yml
 tsconfig.json
 eslint.config.js
+esbuild.js
 .husky/
 .lintstagedrc
 pnpm-workspace.yaml
@@ -33,9 +34,13 @@ $RECYCLE.BIN/
 .env
 .env.*
 
+# Node modules (bundled into dist/extension.js)
+node_modules/
+
 # Keep only what's needed for the extension to run:
 # - package.json (metadata and activation)
 # - README.md (user documentation)  
 # - CHANGELOG.md (version history)
 # - LICENSE (legal)
-# - dist/ (compiled JavaScript)
+# - dist/extension.js (bundled code)
+# - icons/ (extension icons)
